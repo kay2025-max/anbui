@@ -127,89 +127,94 @@
       background-color: #00ffcc;
       color: #000;
     }
-    .messenger-icon {
+    #chatBox {
       position: fixed;
-      bottom: 30px;
-      right: 30px;
-      background-color: #000;
-      border-radius: 50%;
-      padding: 10px;
-      box-shadow: 0 0 15px rgba(255,255,255,0.2);
-      z-index: 999;
-    }
-    .messenger-icon img {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-    }
-    .chat-box {
-      position: fixed;
-      bottom: 100px;
-      right: 30px;
-      width: 300px;
-      background: #1e1e1e;
+      bottom: 20px;
+      right: 20px;
+      background-color: #222;
+      border: 2px solid #00ffcc;
       border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.5);
-      z-index: 998;
+      width: 300px;
       display: none;
       flex-direction: column;
       overflow: hidden;
     }
-    .chat-header {
-      background: #00ffcc;
+    #chatHeader {
+      background-color: #00ffcc;
       color: #000;
       padding: 10px;
       font-weight: bold;
+      cursor: pointer;
     }
-    .chat-body {
-      flex: 1;
+    #chatBody {
       padding: 10px;
-      max-height: 200px;
+      height: 200px;
       overflow-y: auto;
-      color: #eee;
-      font-size: 0.9rem;
-    }
-    .chat-input {
-      display: flex;
-      border-top: 1px solid #00ffcc;
-    }
-    .chat-input input {
-      flex: 1;
-      padding: 10px;
-      border: none;
-      outline: none;
-      background: #333;
+      background-color: #333;
       color: #fff;
     }
-    .chat-input button {
-      background: #00ffcc;
+    #chatInput {
       border: none;
-      padding: 10px 15px;
-      color: #000;
-      cursor: pointer;
+      padding: 10px;
+      width: calc(100% - 20px);
+      box-sizing: border-box;
+      background-color: #444;
+      color: white;
     }
   </style>
 </head>
 <body>
-  <!-- existing content -->
-  <div class="messenger-icon" onclick="toggleChat()">
-    <a href="https://www.facebook.com/profile.php?id=61579093654723" target="_blank">
-      <img src="https://static.xx.fbcdn.net/rsrc.php/yo/r/iRmz9lCMBD2.ico" alt="Messenger">
-    </a>
+  <header>
+    <img src="An Bùi Anime.png" alt="An Bùi Anime Logo">
+    <h1>Anbu Truyện Tranh</h1>
+    <nav>
+      <a href="#videos">🎥 Video</a>
+      <a href="#comics">📚 Truyện</a>
+      <a href="#admin-post">📝 Đăng Bài</a>
+      <a href="#about">ℹ️ Giới thiệu</a>
+      <a href="#contact">📧 Liên hệ</a>
+      <a href="#genres">🗂️ Thể loại</a>
+    </nav>
+  </header>
+
+  <div class="content">
+    <!-- Nội dung cũ giữ nguyên -->
   </div>
 
-  <div class="chat-box" id="chatBox">
-    <div class="chat-header">Anbu Chat Ảo</div>
-    <div class="chat-body" id="chatBody">
-      <p><strong>Bot:</strong> Chào bạn! Tôi có thể giúp gì?</p>
-    </div>
-    <div class="chat-input">
-      <input type="text" id="chatInput" placeholder="Nhập tin nhắn...">
-      <button onclick="sendMessage()">Gửi</button>
-    </div>
+  <!-- Chat ảo -->
+  <div id="chatBox">
+    <div id="chatHeader" onclick="toggleChat()">Chat Ảo 🤖</div>
+    <div id="chatBody"></div>
+    <input type="text" id="chatInput" placeholder="Nhập tin nhắn..." onkeydown="if(event.key==='Enter') sendMessage()">
   </div>
+  <button style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;" onclick="toggleChat()">💬 Chat</button>
+
+  <footer>
+    © 2025 Anbu Truyện Tranh. Được xây dựng dành cho cộng đồng yêu thích anime & manga.<br>
+    <span id="visitorCounter">Số lượt truy cập: <span id="counter">...</span></span>
+  </footer>
 
   <script>
+    function loginAsAdmin() {
+      const password = prompt("Nhập mật khẩu admin:");
+      if (password === "admin123") {
+        document.getElementById("admin-area").classList.remove("hidden");
+        alert("Đăng nhập thành công!");
+      } else {
+        alert("Sai mật khẩu!");
+      }
+    }
+
+    function submitPost() {
+      const content = document.getElementById("postContent").value;
+      if (content.trim() !== "") {
+        const post = document.createElement("div");
+        post.innerHTML = `<p>${content}</p><hr>`;
+        document.getElementById("postedContent").prepend(post);
+        document.getElementById("postContent").value = "";
+      }
+    }
+
     function toggleChat() {
       const chatBox = document.getElementById("chatBox");
       chatBox.style.display = chatBox.style.display === "flex" ? "none" : "flex";
@@ -224,12 +229,18 @@
         userMsg.innerHTML = `<strong>Bạn:</strong> ${message}`;
         body.appendChild(userMsg);
         const botMsg = document.createElement("p");
-        botMsg.innerHTML = `<strong>Bot:</strong> Tôi đang xử lý "${message}"...`;
+        botMsg.innerHTML = `<strong>Bot:</strong> Tôi đang xử lý \"${message}\"...`;
         body.appendChild(botMsg);
         body.scrollTop = body.scrollHeight;
         input.value = "";
       }
     }
+
+    const counterElement = document.getElementById("counter");
+    let count = localStorage.getItem("visitCount") || 0;
+    count++;
+    localStorage.setItem("visitCount", count);
+    counterElement.textContent = count;
   </script>
 </body>
 </html>
