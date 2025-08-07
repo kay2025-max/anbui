@@ -45,6 +45,62 @@
     nav a:hover {
       color: #ffeb3b;
     }
+    .content {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+      max-width: 1000px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+    .card {
+      background-color: #222;
+      border-radius: 15px;
+      padding: 25px;
+      box-shadow: 0 0 15px rgba(0, 255, 204, 0.2);
+    }
+    .card h2 {
+      background: linear-gradient(to right, #00ffcc33, #0066ff33);
+      color: #00ffcc;
+      padding: 12px;
+      border-left: 6px solid #00ffcc;
+      border-radius: 8px;
+      font-size: 1.5rem;
+    }
+    iframe {
+      width: 100%;
+      height: 400px;
+      border: none;
+      border-radius: 10px;
+    }
+    textarea {
+      width: 100%;
+      height: 100px;
+      background-color: #333;
+      color: #fff;
+      border: 1px solid #00ffcc;
+      border-radius: 5px;
+      padding: 10px;
+    }
+    button {
+      background-color: #00ffcc;
+      color: #000;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      border-radius: 5px;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    button:hover {
+      background-color: #00ddaa;
+    }
+    ul li {
+      margin: 10px 0;
+    }
+    .hidden {
+      display: none;
+    }
     footer {
       text-align: center;
       padding: 30px 10px;
@@ -57,33 +113,123 @@
       font-size: 0.85rem;
       color: #aaa;
     }
+    .page-links a {
+      display: inline-block;
+      margin: 0 10px;
+      padding: 8px 15px;
+      background-color: #444;
+      color: #fff;
+      border-radius: 20px;
+      text-decoration: none;
+      transition: background 0.3s;
+    }
+    .page-links a:hover {
+      background-color: #00ffcc;
+      color: #000;
+    }
+    .messenger-icon {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background-color: #000;
+      border-radius: 50%;
+      padding: 10px;
+      box-shadow: 0 0 15px rgba(255,255,255,0.2);
+      z-index: 999;
+    }
+    .messenger-icon img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+    }
+    .chat-box {
+      position: fixed;
+      bottom: 100px;
+      right: 30px;
+      width: 300px;
+      background: #1e1e1e;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+      z-index: 998;
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .chat-header {
+      background: #00ffcc;
+      color: #000;
+      padding: 10px;
+      font-weight: bold;
+    }
+    .chat-body {
+      flex: 1;
+      padding: 10px;
+      max-height: 200px;
+      overflow-y: auto;
+      color: #eee;
+      font-size: 0.9rem;
+    }
+    .chat-input {
+      display: flex;
+      border-top: 1px solid #00ffcc;
+    }
+    .chat-input input {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      outline: none;
+      background: #333;
+      color: #fff;
+    }
+    .chat-input button {
+      background: #00ffcc;
+      border: none;
+      padding: 10px 15px;
+      color: #000;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
-  <header>
-    <img src="An Bùi Anime.png" alt="An Bùi Anime Logo">
-    <h1>Anbu Truyện Tranh</h1>
-    <nav>
-      <a href="videos.html">🎥 Video</a>
-      <a href="comics.html">📚 Truyện</a>
-      <a href="admin.html">📝 Đăng Bài</a>
-      <a href="about.html">ℹ️ Giới thiệu</a>
-      <a href="contact.html">📧 Liên hệ</a>
-      <a href="genres.html">🗂️ Thể loại</a>
-    </nav>
-  </header>
+  <!-- existing content -->
+  <div class="messenger-icon" onclick="toggleChat()">
+    <a href="https://www.facebook.com/profile.php?id=61579093654723" target="_blank">
+      <img src="https://static.xx.fbcdn.net/rsrc.php/yo/r/iRmz9lCMBD2.ico" alt="Messenger">
+    </a>
+  </div>
 
-  <footer>
-    © 2025 Anbu Truyện Tranh. Được xây dựng dành cho cộng đồng yêu thích anime & manga.<br>
-    <span id="visitorCounter">Số lượt truy cập: <span id="counter">...</span></span>
-  </footer>
+  <div class="chat-box" id="chatBox">
+    <div class="chat-header">Anbu Chat Ảo</div>
+    <div class="chat-body" id="chatBody">
+      <p><strong>Bot:</strong> Chào bạn! Tôi có thể giúp gì?</p>
+    </div>
+    <div class="chat-input">
+      <input type="text" id="chatInput" placeholder="Nhập tin nhắn...">
+      <button onclick="sendMessage()">Gửi</button>
+    </div>
+  </div>
 
   <script>
-    const counterElement = document.getElementById("counter");
-    let count = localStorage.getItem("visitCount") || 0;
-    count++;
-    localStorage.setItem("visitCount", count);
-    counterElement.textContent = count;
+    function toggleChat() {
+      const chatBox = document.getElementById("chatBox");
+      chatBox.style.display = chatBox.style.display === "flex" ? "none" : "flex";
+    }
+
+    function sendMessage() {
+      const input = document.getElementById("chatInput");
+      const body = document.getElementById("chatBody");
+      const message = input.value.trim();
+      if (message) {
+        const userMsg = document.createElement("p");
+        userMsg.innerHTML = `<strong>Bạn:</strong> ${message}`;
+        body.appendChild(userMsg);
+        const botMsg = document.createElement("p");
+        botMsg.innerHTML = `<strong>Bot:</strong> Tôi đang xử lý "${message}"...`;
+        body.appendChild(botMsg);
+        body.scrollTop = body.scrollHeight;
+        input.value = "";
+      }
+    }
   </script>
 </body>
 </html>
