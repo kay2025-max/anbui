@@ -1,0 +1,34 @@
+<?php
+// File lưu IP bị cấm
+$banFile = "banned_ips.txt";
+
+// Lấy IP người dùng
+$ip = $_SERVER['REMOTE_ADDR'];
+
+// Kiểm tra nếu bị cấm
+if (file_exists($banFile)) {
+    $banned = file($banFile, FILE_IGNORE_NEW_LINES);
+    if (in_array($ip, $banned)) {
+        die("🚫 Bạn đã bị cấm truy cập!");
+    }
+}
+
+// Nếu admin bấm ban
+if (isset($_GET['ban'])) {
+    file_put_contents($banFile, $ip . PHP_EOL, FILE_APPEND);
+    echo "Đã ban IP: $ip";
+    exit;
+}
+?>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Admin</title>
+</head>
+<body>
+<h1>Trang Admin</h1>
+<p>IP hiện tại: <b><?php echo $ip; ?></b></p>
+<a href="?ban=1" style="color:red;">Ban IP này</a>
+</body>
+</html>
