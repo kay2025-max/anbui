@@ -1,14 +1,19 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> An Bùi-Trang Chủ </title>
+    <title>An Bùi - Trang Chủ</title>
     <link rel="stylesheet" href="styles.css">
 
     <!-- Mã xác minh AdSense -->
     <script data-ad-client="ca-pub-0123456789012345" async 
         src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+    <!-- Google OAuth -->
+    <meta name="google-signin-client_id" content="120451681302-7poh20dcpmhh6af5pu2cbs1ts8bj3189.apps.googleusercontent.com">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jwt-decode/3.1.2/jwt-decode.min.js"></script>
 </head>
 <body>
     <header>
@@ -28,6 +33,22 @@
     <section class="banner">
         <h2>Chào mừng bạn đến với Website!</h2>
         <p>Cập nhật tin tức, thủ thuật, và hướng dẫn lập trình.</p>
+    </section>
+
+    <!-- Khu vực đăng nhập Google -->
+    <section style="text-align:center; margin: 20px 0;">
+        <!-- Nút đăng nhập -->
+        <div id="g_id_onload"
+             data-client_id="120451681302-7poh20dcpmhh6af5pu2cbs1ts8bj3189.apps.googleusercontent.com"
+             data-callback="handleCredentialResponse">
+        </div>
+        <div class="g_id_signin" data-type="standard"></div>
+
+        <!-- Hiển thị thông tin người dùng sau khi đăng nhập -->
+        <div id="user-info" style="display:none; margin-top:15px; align-items:center; gap:10px; justify-content:center;">
+            <img id="user-avatar" src="" alt="Avatar" style="width:40px; height:40px; border-radius:50%;">
+            <span id="user-name" style="font-weight:bold;"></span>
+        </div>
     </section>
 
     <!-- Nội dung chính -->
@@ -62,20 +83,32 @@
         </div>
     </main>
 
-   <footer>
-    <p>© 2025 An Bùi. All rights reserved. <p>| <a href="privacy.html">Chính sách bảo mật</a></p></p>
-    <div style="text-align:center; margin-top: 10px;">
-        <img src="https://media.giphy.com/media/hvRJCLFzcasrR4ia7z/giphy.gif" 
-             alt="Xin chào" 
-             style="width:100px;height:auto;">
+    <footer>
+        <p>© 2025 An Bùi. All rights reserved. <p>| <a href="privacy.html">Chính sách bảo mật</a></p></p>
+        <div style="text-align:center; margin-top: 10px;">
+            <img src="https://media.giphy.com/media/hvRJCLFzcasrR4ia7z/giphy.gif" 
+                alt="Xin chào" 
+                style="width:100px;height:auto;">
             <p style="text-align:center; font-style: italic;">“Chia sẻ để cùng phát triển”</p>
-    <div style="text-align:center; margin-top: 10px;">
-        <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExczYzd2g4bmcxbXB5cWl3aXB6M2tvOG1jbWQ4aTJtY2l2YXhtZWg3MiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/pOZhmE42D1WrCWz4VD/giphy.gif" 
-             alt="Coding" 
-             style="width:120px;height:auto;">
-    </div>
-    </div>
-</footer>
+            <div style="text-align:center; margin-top: 10px;">
+                <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExczYzd2g4bmcxbXB5cWl3aXB6M2tvOG1jbWQ4aTJtY2l2YXhtZWg3MiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/pOZhmE42D1WrCWz4VD/giphy.gif" 
+                    alt="Coding" 
+                    style="width:120px;height:auto;">
+            </div>
+        </div>
+    </footer>
 
+    <!-- JavaScript xử lý đăng nhập -->
+    <script>
+        function handleCredentialResponse(response) {
+            const data = jwt_decode(response.credential);
+
+            // Ẩn nút login, hiển thị thông tin user
+            document.querySelector('.g_id_signin').style.display = 'none';
+            document.getElementById('user-info').style.display = 'flex';
+            document.getElementById('user-avatar').src = data.picture;
+            document.getElementById('user-name').innerText = data.name;
+        }
+    </script>
 </body>
 </html>
